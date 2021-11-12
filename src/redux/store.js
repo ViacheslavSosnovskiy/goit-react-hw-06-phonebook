@@ -1,32 +1,22 @@
-import { createStore, applyMiddleware } from "redux";
-import { composeWithDevTools} from 'redux-devtools-extention'
+import { createStore, combineReducers } from "redux";
+import { composeWithDevTools } from "redux-devtools-extention";
+import counterReducer from "./count/counter-reducer";
+import todosReducer from "./todos/todos-reduser";
 
-const initialState = {counter: {value: 0}, user: {}}
+const rootReducer = combineReducers({
+  counter: counterReducer,
+  todos: todosReducer,
+});
 
-const reduser = ((state = initialState, {type, payload}) => {
-    
-    switch(type) {
-        case 'counter/increment':
-            return {...state,counter:{...state.counter, value:state.counter.value + payload}}
+const store = createStore(rootReducer, composeWithDevTools());
 
-        case 'counter/decrement':
-            return { value: state.value - paylaod}
-
-        default:
-            return state;
-    }
-
-};
-
-const store = createStore(reduser,composeWithDevTools())
-
-export default store
+export default store;
 
 // import {connect} from 'react-redax';
 
 // const mapStateToProps = state => {
 //     return {
-//         value: state.counterValue    
+//         value: state.counterValue
 //     }
 // }
 

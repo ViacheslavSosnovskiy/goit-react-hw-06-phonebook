@@ -70,4 +70,12 @@ class ContactForm extends Component {
   }
 }
 
+
+// import todosActions from ''
+// const mapDispatchToProps = (dispatch) => ({
+//   onSubmit: (text) => dispatch(todosActions.addTodo(text)),
+// });
+
+// export default connect(null,mapDispatchToProps)(ContactForm)
+
 export default ContactForm;
