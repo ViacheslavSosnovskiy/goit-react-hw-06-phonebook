@@ -1,29 +1,48 @@
-import { createStore, combineReducers } from "redux";
-import { composeWithDevTools } from "redux-devtools-extention";
-import counterReducer from "./count/counter-reducer";
-import todosReducer from "./todos/todos-reduser";
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import contactsReducer from './contacts/contacts-reducers'
+import logger from 'redux-logger'
+import { 
+  persistStore, 
+  persistReducer, 
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER, } 
+  from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
-const rootReducer = combineReducers({
-  counter: counterReducer,
-  todos: todosReducer,
-});
+const contactsPersistConfig = {
+  key: 'contact',
+  storage,
+  blacklist: ['filter']
+}
 
-const store = createStore(rootReducer, composeWithDevTools());
+const middleware = [...getDefaultMiddleware({
+  serializableCheck: {
+    ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+  },
+}), logger]
 
-export default store;
+export const store = configureStore({
+  reducer: {
+    contacts: persistReducer(contactsPersistConfig, contactsReducer)
+  },
+  middleware,
+  devTools: process.env.NODE_ENV === 'development'
+})
 
-// import {connect} from 'react-redax';
+export const persistor = persistStore(store)
 
-// const mapStateToProps = state => {
-//     return {
-//         value: state.counterValue
-//     }
-// }
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         onIncrement: () => dispatch(actions.increment(5)),
-//         onDecrement: () => dispatch(actions.decrement(5)),
-//     }
-// }
-//  export default connect(mapStateToProps, mapDispatchToB )(Counter)
+
+
+// import { createStore, combineReducers } from 'redux';
+// import { composeWithDevTools } from "redux-devtools-extension";
+
+// const rootReducer = combineReducers({
+//   contacts: contactsReducer
+// });
+
+// const store = createStore(rootReducer, composeWithDevTools());

@@ -1,37 +1,46 @@
-import React, { Component } from "react";
+import {useState} from "react";
 import s from "./contactForm.module.css";
+import {useSelector, useDispatch} from 'react-redux'
+import contactsActions from '../../redux/contacts/contacts-actions'
+import { toast } from "react-toastify";
 
-class ContactForm extends Component {
-  state = {
+
+const initialState = {
     name: "",
     number: "",
-  };
+}
 
-  handleChange = (e) => {
+export default function ContactForm() {
+const [state, setState] = useState(initialState)
+const contacts = useSelector(state => state.contacts.items)
+const dispatch = useDispatch()
+
+ const handleChange = (e) => {
     const { name, value } = e.currentTarget;
 
-    this.setState({
-      [name]: value,
-    });
+    setState((prevState) => ({...prevState, [name]: value}))
   };
 
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state);
 
-    this.props.onSubmit(this.state);
-
-    this.resetForm();
+    if(contacts.some((contact) => contact.name === state.name)) {
+      toast.error("This contact is already exist ! Try one more time, please!");
+      return;
+    }
+  
+    // this.props.onSubmit(this.state);
+    dispatch(contactsActions.addContact(state))
+    resetForm();
   };
 
-  resetForm = () => {
-    this.setState({ name: "", number: "" });
+  const resetForm = () => {
+    setState(initialState);
   };
 
-  render() {
     return (
       <>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <label className={s.label}>
             Name
             <input
@@ -39,8 +48,8 @@ class ContactForm extends Component {
               className={s.input}
               type="text"
               name="name"
-              value={this.state.name}
-              onChange={this.handleChange}
+              value={state.name}
+              onChange={handleChange}
               pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
               title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
               required
@@ -53,8 +62,8 @@ class ContactForm extends Component {
               className={s.input}
               type="tel"
               name="number"
-              value={this.state.number}
-              onChange={this.handleChange}
+              value={state.number}
+              onChange={handleChange}
               pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
               title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
               required
@@ -68,14 +77,9 @@ class ContactForm extends Component {
       </>
     );
   }
-}
 
-
-// import todosActions from ''
 // const mapDispatchToProps = (dispatch) => ({
-//   onSubmit: (text) => dispatch(todosActions.addTodo(text)),
+//   onSubmit: (text) => dispatch(contactsActions.addContact(text)),
 // });
 
-// export default connect(null,mapDispatchToProps)(ContactForm)
-
-export default ContactForm;
+// export default connect(null, mapDispatchToProps)(ContactForm);
