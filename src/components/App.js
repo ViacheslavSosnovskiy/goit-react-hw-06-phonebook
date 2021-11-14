@@ -10,12 +10,11 @@ export default function App() {
 
   return (
     <div className={s.container}>
-      <h2>Add contacts</h2>
+      <h1>Phonebook</h1>
+      <h3>Add contacts</h3>
       <ContactForm />
 
-      <h1>Phonebook</h1>
-
-      <h2>Contacts</h2>
+      <h3>Contacts</h3>
       <Filter />
       <div className={s.wrapper}>
         <ContactList />

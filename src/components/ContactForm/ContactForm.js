@@ -1,6 +1,7 @@
 import {useState} from "react";
 import s from "./contactForm.module.css";
 import {useSelector, useDispatch} from 'react-redux'
+import {getItems} from '../../redux/contacts/contacts-selectors'
 import contactsActions from '../../redux/contacts/contacts-actions'
 import { toast } from "react-toastify";
 
@@ -12,7 +13,7 @@ const initialState = {
 
 export default function ContactForm() {
 const [state, setState] = useState(initialState)
-const contacts = useSelector(state => state.contacts.items)
+const contacts = useSelector(getItems)
 const dispatch = useDispatch()
 
  const handleChange = (e) => {
